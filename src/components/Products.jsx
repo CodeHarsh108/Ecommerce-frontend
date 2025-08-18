@@ -34,7 +34,7 @@ const Products = () => {
             {isLoading ? (
                 <p>It is loading...</p>
             ) : errorMessage ? (
-                <div className="flex justify-cneter items-center h-[200px]">
+                <div className="flex justify-center items-center h-[200px]">
                     <FaExclamationTriangle className="text-slate-800 text-3xl mr-2"/>
                     <span className="text-slate-800 text-lg font-medium">
                         {errorMessage}
@@ -53,4 +53,4 @@ const Products = () => {
     )
 }   
 
-export default Products
+export default Products;
