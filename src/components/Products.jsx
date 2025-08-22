@@ -8,9 +8,7 @@ import React from 'react';
 const Products = () => {
     const { products, error } = useSelector((state) => state.products);
     const dispatch = useDispatch();
-
     useEffect(() => {
-        console.log("Dispatching fetchProducts...");
         dispatch(fetchProducts());
     }, [dispatch]);
 
@@ -23,7 +21,7 @@ const Products = () => {
             <div className="flex justify-center items-center h-[200px]">
                 <FaExclamationTriangle className="text-red-500 text-3xl mr-2" />
                 <span className="text-red-500 text-lg font-medium">
-                    Failed to load products. Check console for details.
+                    Failed to load products.
                 </span>
             </div>
         );
