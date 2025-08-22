@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import ProductViewModal from './ProductViewModal';
+import React from 'react';
 
 
 const ProductCard = ({
@@ -36,7 +37,7 @@ const ProductCard = ({
                     specialPrice
                 });
             }} className="w-full overflow-hidden aspect-[3/2]">
-            <img className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105" src={image} alt={productName}></img>
+            <img className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105" src= {image} alt={productName}></img>
             </div>
             <div className="p-4">
                 <h2 onClick={() => {

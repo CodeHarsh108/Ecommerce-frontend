@@ -1,5 +1,6 @@
 import './App.css'
 import Products from './components/Products'
+import React from 'react';
 
 function App() {
   
@@ -11,4 +12,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

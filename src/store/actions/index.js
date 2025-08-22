@@ -1,19 +1,25 @@
 import api from "../../api/api";
 
 export const fetchProducts = () => async (dispatch) => {
-try {
-    const { data } = await api.get(`/public/products`);
-    dispatch({
-        type: 'FETCH_PRODUCTS',
-        payload: data.content,
-        pageNumber: data.pageNumber,
-        pageSize: data.pageSize,
-        totalPages: data.totalPages,
-        totalElements: data.totalElements,
-        lastPage: data.lastPage
-
-    })
-} catch (error) {
-    console.error("Error fetching products:", error);
-}
+    try {
+        console.log("API call initiated");
+        const { data } = await api.get(`/public/products`);
+        console.log("API response received:", data);
+        
+        dispatch({
+            type: "FETCH_PRODUCTS",
+            payload: data.content,
+            pageNumber: data.pageNumber,
+            pageSize: data.pageSize,
+            totalPages: data.totalPages,
+            totalElements: data.totalElements,
+            lastPage: data.lastPage
+        });
+    } catch (error) {
+        dispatch({
+            type: "FETCH_PRODUCTS_ERROR",
+            payload: error.message 
+        });
+        console.error("API Error:", error);  
+    }
 };

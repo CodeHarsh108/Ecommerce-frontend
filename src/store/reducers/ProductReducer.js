@@ -1,8 +1,8 @@
-
 const initialState = {
   products: null,
+  error: null, 
   categories: null,
-  pagination: []
+  pagination: {}
 };
 
 export const productReducer = (state = initialState, action) => {
@@ -11,7 +11,9 @@ export const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 products: action.payload,
+                error: null, 
                 pagination: {
+                    ...state.pagination,
                     pageNumber: action.pageNumber,
                     pageSize: action.pageSize,
                     totalPages: action.totalPages,
@@ -19,7 +21,12 @@ export const productReducer = (state = initialState, action) => {
                     lastPage: action.lastPage
                 }
             };
+        case 'FETCH_PRODUCTS_ERROR':  
+            return {
+                ...state,
+                error: action.payload
+            };
         default:
             return state;
     }
-}
+};
