@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { fetchProducts } from "../store/actions/index.js";
 import React from 'react';
+import Filter from "./Filter.jsx";
 
 const Products = () => {
     const { products, error } = useSelector((state) => state.products);
@@ -29,6 +30,7 @@ const Products = () => {
 
     return (
         <div className="lg:px-14 sm:px-6 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
+            <Filter />
             <div className="min-h-[700px]">
                 <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-y-6 gap-x-6">
                     {products.map((item, i) => (
