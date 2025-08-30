@@ -1,6 +1,7 @@
 import { MenuItem, FormControl, InputLabel, Select, Tooltip, Button } from '@mui/material';
-import React, { useState } from 'react';
-import { FiArrowUp, FiRefreshCcw, FiSearch } from "react-icons/fi";
+import React, { useState, useEffect } from 'react';
+import { FiArrowDown, FiArrowUp, FiRefreshCcw, FiSearch } from "react-icons/fi";
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Filter = () => {
   const categories = [
@@ -10,21 +11,81 @@ const Filter = () => {
     { categoryId: 6, name: 'Beauty' },
   ];
 
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const [category, setCategory] = useState("all");
+  const [sortOrder, setSortOrder] = useState("asc");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const currentCategory = searchParams.get("category") || "all";
+    const currentSortOrder = searchParams.get("sortby") || "asc";
+    const currentSearchTerm = searchParams.get("keyword") || "";
+    
+    setCategory(currentCategory);
+    setSortOrder(currentSortOrder);
+    setSearchTerm(currentSearchTerm);
+  }, [searchParams]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
+      
+      if(searchTerm) {
+        params.set("keyword", searchTerm);
+      } else {
+        params.delete("keyword");
+      }
+      navigate(`${location.pathname}?${params.toString()}`);
+    }, 1);
+
+    return () => {
+      clearTimeout(handler);
+    }
+  }, [searchTerm, navigate, location.pathname, searchParams]);
 
   const handleCategoryChange = (event) => {
-    setCategory(event.target.value);
+    const selectedCategory = event.target.value;
+    const params = new URLSearchParams(searchParams);
+
+    if (selectedCategory === "all") {
+      params.delete("category");
+    } else {
+      params.set("category", selectedCategory);
+    }
+    navigate(`${location.pathname}?${params}`);
+    setCategory(selectedCategory);
+  };
+
+  const toggleSortOrder = () => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    const params = new URLSearchParams(searchParams);
+    
+    params.set("sortby", newOrder);
+    navigate(`${location.pathname}?${params}`);
+    setSortOrder(newOrder);
+  };
+
+  const handleClearFilter = () => {
+    // Clear all filters and reset to default
+    navigate(location.pathname);
+    setCategory("all");
+    setSortOrder("asc");
+    setSearchTerm("");
   };
 
   return (
     <div className="flex flex-col-reverse lg:flex-row lg:justify-between items-center gap-6 px-6 py-4 bg-white shadow-lg rounded-xl">
-
       {/* Search Bar */}
       <div className="relative flex items-center w-full sm:w-[420px] 2xl:w-[450px]">
         <input
           type="text"
           placeholder="Search Products"
           className="w-full py-2 pl-12 pr-4 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
         <FiSearch className="absolute left-4 text-gray-500" size={22} />
       </div>
@@ -50,10 +111,11 @@ const Filter = () => {
         </FormControl>
 
         {/* Sort Button and Clear Filter */}
-        <Tooltip title="Sorted By Price : Ascending">
+        <Tooltip title={`Sorted By Price: ${sortOrder === "asc" ? "Ascending" : "Descending"}`}>
           <Button
             variant="contained"
             color="primary"
+            onClick={toggleSortOrder}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -66,11 +128,12 @@ const Filter = () => {
             }}
           >
             Sort By
-            <FiArrowUp size={20} />
+            {sortOrder === "asc" ? <FiArrowUp size={20} /> : <FiArrowDown size={20} />}
           </Button>
         </Tooltip>
         <button
           className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-rose-700 to-rose-500 text-white rounded-lg shadow-lg font-semibold transition hover:from-rose-800 hover:to-rose-600 focus:outline-none focus:ring-2 focus:ring-rose-400"
+          onClick={handleClearFilter}
         >
           <FiRefreshCcw size={18} />
           <span>Clear Filter</span>
