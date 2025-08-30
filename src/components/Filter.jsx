@@ -1,16 +1,9 @@
-import { MenuItem, FormControl, InputLabel, Select, Tooltip, Button } from '@mui/material';
+import { MenuItem, FormControl, InputLabel, Select, Tooltip, Button, CircularProgress } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { FiArrowDown, FiArrowUp, FiRefreshCcw, FiSearch } from "react-icons/fi";
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
-const Filter = () => {
-  const categories = [
-    { categoryId: 3, name: 'Electronics' },
-    { categoryId: 4, name: 'Fashion' },
-    { categoryId: 5, name: 'Furniture' },
-    { categoryId: 6, name: 'Beauty' },
-  ];
-
+const Filter = ({ categories = [], loading = false }) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,7 +32,7 @@ const Filter = () => {
         params.delete("keyword");
       }
       navigate(`${location.pathname}?${params.toString()}`);
-    }, 1);
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -55,7 +48,7 @@ const Filter = () => {
     } else {
       params.set("category", selectedCategory);
     }
-    navigate(`${location.pathname}?${params}`);
+    navigate(`${location.pathname}?${params.toString()}`);
     setCategory(selectedCategory);
   };
 
@@ -64,12 +57,11 @@ const Filter = () => {
     const params = new URLSearchParams(searchParams);
     
     params.set("sortOrder", newOrder);
-    navigate(`${location.pathname}?${params}`);
+    navigate(`${location.pathname}?${params.toString()}`);
     setSortOrder(newOrder);
   };
 
   const handleClearFilter = () => {
-    // Clear all filters and reset to default
     navigate(location.pathname);
     setCategory("all");
     setSortOrder("asc");
@@ -100,13 +92,20 @@ const Filter = () => {
             onChange={handleCategoryChange}
             label="Category"
             sx={{ color: '#374151', borderColor: '#374151', background: '#f9fafb' }}
+            disabled={loading}
           >
             <MenuItem value="all">All</MenuItem>
-            {categories.map((item) => (
-              <MenuItem value={item.name} key={item.categoryId}>
-                {item.name}
+            {loading ? (
+              <MenuItem disabled>
+                <CircularProgress size={20} />
               </MenuItem>
-            ))}
+            ) : (
+              categories.map((item) => (
+                <MenuItem value={item.categoryName} key={item.categoryId}>
+                  {item.categoryName}
+                </MenuItem>
+              ))
+            )}
           </Select>
         </FormControl>
 
