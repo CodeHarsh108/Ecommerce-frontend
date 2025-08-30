@@ -5,13 +5,13 @@ import { useEffect } from "react";
 import { fetchProducts } from "../store/actions/index.js";
 import React from 'react';
 import Filter from "./Filter.jsx";
+import useProductFilter from "./useProductFilter.jsx";
 
 const Products = () => {
     const { products, error } = useSelector((state) => state.products);
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(fetchProducts());
-    }, [dispatch]);
+    useProductFilter();
+        
 
     if (!products && !error) {
         return <div className="text-center py-20">Loading products...</div>;
