@@ -1,19 +1,19 @@
 import { FaExclamationTriangle } from "react-icons/fa";
-import ProductCard from "./ProductCard";
+import ProductCard from "../shared/ProductCard.jsx";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { fetchCategories, fetchProducts } from "../store/actions/index.js";
+import { fetchCategories, fetchProducts } from "../../store/actions/index.js";
 import React from 'react';
-import Filter from "./Filter.jsx";
-import useProductFilter from "./useProductFilter.jsx";
+import Filter from "../products/Filter.jsx"
+import useProductFilter from "../../hooks/useProductFilter.jsx"
 import { Hourglass } from "react-loader-spinner";
-import Paginations from "./Paginations";
+import Paginations from "../shared/Paginations.jsx";
 import { useNavigate } from "react-router-dom";
 
 const Products = () => {
     const { products, error, categories, categoryLoading, pagination } = useSelector((state) => state.products);
     const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
     useProductFilter();
 
     useEffect(() => {

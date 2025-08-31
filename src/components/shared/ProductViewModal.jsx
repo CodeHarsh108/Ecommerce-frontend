@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { Divider } from '@mui/material';
 import { MdDone, MdClose } from 'react-icons/md';
-import Status from './Status';
+import Status from '../shared/Status';
 import React from 'react';
 
 
