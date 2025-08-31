@@ -1,38 +1,28 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { useSearchParams } from "react-router-dom";
-import { fetchProducts } from "../store/actions/index.js";
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { fetchProducts } from '../store/actions/index.js';
 
 const useProductFilter = () => {
-    const [ searchParams ] = useSearchParams();
+    const [searchParams] = useSearchParams();
     const dispatch = useDispatch();
-    
-    useEffect(() => {
-        const params = new URLSearchParams();
 
-        const currentPage = searchParams.get("page") ? Number(searchParams.get("page")) : 1;
-        params.set("pageNumber", currentPage - 1);
+    useEffect(() => {
+        // Ensure page parameter exists with default value
+        const params = new URLSearchParams(searchParams);
         
-        const sortOrder = searchParams.get("sortOrder") || "asc";
-        const sortBy = searchParams.get("sortBy") || "price";
-        const categoryParams = searchParams.get("category") || null;
-        const keyword = searchParams.get("keyword") || null;
-        
-        params.set("sortBy", sortBy);
-        params.set("sortOrder", sortOrder);
-        
-        if (categoryParams && categoryParams !== "all") {
-            params.set("category", categoryParams);
+        if (!params.has('page')) {
+            params.set('page', '1');
         }
         
-        if (keyword) {
-            params.set("keyword", keyword);
+        if (!params.has('pageSize')) {
+            params.set('pageSize', '12');
         }
         
         const queryString = params.toString();
-        console.log("Query String:", queryString);
+        console.log("Fetching products with query:", queryString);
         dispatch(fetchProducts(queryString));
-    }, [dispatch, searchParams]);
+    }, [searchParams, dispatch]);
 };
 
 export default useProductFilter;

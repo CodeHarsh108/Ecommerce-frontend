@@ -7,38 +7,35 @@ import React from 'react';
 import Filter from "./Filter.jsx";
 import useProductFilter from "./useProductFilter.jsx";
 import { Hourglass } from "react-loader-spinner";
+import Paginations from "./Paginations";
+import { useNavigate } from "react-router-dom";
 
 const Products = () => {
-    const { products, error, categories, categoryLoading } = useSelector((state) => state.products);
+    const { products, error, categories, categoryLoading, pagination } = useSelector((state) => state.products);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     useProductFilter();
 
     useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);
 
+    // Add this useEffect to handle initial page load without page parameter
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if (!params.has('page')) {
+            // If no page parameter, set it to 1
+            params.set('page', '1');
+            navigate(`${window.location.pathname}?${params.toString()}`, { replace: true });
+        }
+    }, [navigate]);
+
     console.log("Categories:", categories);
     console.log("Category loading:", categoryLoading);
+    console.log("Pagination:", pagination);
 
-    // Loading state for categories
-    if (categoryLoading) {
-        return (
-            <div className="flex justify-center items-center py-20">
-                <Hourglass
-                    visible={true}
-                    height="80"
-                    width="80"
-                    ariaLabel="hourglass-loading"
-                    wrapperStyle={{}}
-                    wrapperClass=""
-                    colors={['#306cce', '#72a1ed']}
-                />
-                <span className="ml-4 text-gray-600">Please Wait...</span>
-            </div>
-        );
-    }
-
-    if (!products && !error) {
+    // Combined loading state
+    if (categoryLoading || (!products && !error)) {
         return (
             <div className="flex justify-center items-center py-20">
                 <Hourglass
@@ -70,11 +67,28 @@ const Products = () => {
         <div className="lg:px-14 sm:px-6 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
             <Filter categories={categories || []} loading={categoryLoading}/>
             <div className="min-h-[700px]">
-                <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-y-6 gap-x-6">
-                    {products && products.map((item, i) => (
-                        <ProductCard key={i} {...item} />
-                    ))}
-                </div>
+                {products && products.length > 0 ? (
+                    <>
+                        <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-2 sm:grid-cols-2 gap-y-6 gap-x-6">
+                            {products.map((item, i) => (
+                                <ProductCard key={i} {...item} />
+                            ))}
+                        </div>
+                        {pagination && pagination.totalPages > 1 && (
+                            <div className="flex justify-center pt-10">
+                                <Paginations 
+                                    numberOfPage={pagination.totalPages}
+                                    totalProducts={pagination.totalElements}
+                                    currentPage={pagination.pageNumber + 1} // Convert 0-based to 1-based
+                                />
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <div className="flex justify-center items-center py-20">
+                        <span className="text-gray-600 text-lg">No products found</span>
+                    </div>
+                )}
             </div>
         </div>
     );
