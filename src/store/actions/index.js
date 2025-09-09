@@ -1,5 +1,6 @@
 import api from "../../api/api";
 
+
 export const fetchProducts = (queryString) => async (dispatch) => {
     try {
         console.log("API call initiated with query:", queryString);
@@ -48,4 +49,25 @@ export const fetchCategories = () => async (dispatch) => {
             payload: error.message 
         });
     }
+};
+
+
+export const addToCart = (data, qty = 1, toast) => (dispatch, getState) => {
+    //Find the product
+    const { products } = getState().products;
+    const getProduct = products.find((item) => item.productId === data.productId);
+    //Check for stocks
+    const isQuantityExist = getProduct.quantity >= qty;
+    //If in stock -> Add to cart
+    if (isQuantityExist) {
+        dispatch({
+            type: "ADD_CART",
+            payload: { ...data, quantity : qty }
+        });
+        toast.success(`${data.productName} added to cart!`);
+        localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
+    }else{
+        toast.error(`Only ${getProduct.quantity} items in stock!`);
+    }
+    //If not in stock -> error
 };

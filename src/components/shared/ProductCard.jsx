@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { use, useState } from 'react';
 import { FaShoppingCart } from 'react-icons/fa';
 import ProductViewModal from '../shared/ProductViewModal';
 import React from 'react';
 import truncateText from '../../utils/truncateText';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../store/actions/index.js';
+import toast from 'react-hot-toast';
 
 
 const ProductCard = ({
@@ -23,6 +26,11 @@ const ProductCard = ({
         setSelectedViewProduct(product);
         setOpenProductViewModal(true);
     }
+    const dispatch = useDispatch();
+
+    const addtoCartHandler = (cartItems) => {
+        dispatch(addToCart(cartItems, 1, toast))
+    };
 
     return (
         <div className="border rounded-lg shadow-xl overflow-hidden transition-shadow duration-300">
@@ -77,7 +85,15 @@ const ProductCard = ({
                 )}
                 <button
                 disabled={!isAvailable || btnLoader}
-                onClick={() => {}}
+                onClick={() => addtoCartHandler({
+                    image,
+                    productName,
+                    description,
+                    specialPrice,
+                    price,
+                    productId,
+                    quantity
+                })}
                 className={`px-4 py-2 rounded-lg text-white  ${isAvailable ? 'bg-blue-600 hover:bg-blue-700 ' : 'bg-gray-400 cursor-not-allowed'}`}
                 >
                     <FaShoppingCart className="inline mr-2" />
