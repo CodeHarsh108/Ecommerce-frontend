@@ -15,7 +15,52 @@ const Products = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate(); 
     useProductFilter();
-
+    // Custom styles for enhanced beauty
+    React.useEffect(() => {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            body {
+                background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 100%);
+            }
+            .products-bg {
+                background: rgba(255,255,255,0.85);
+                border-radius: 24px;
+                box-shadow: 0 8px 32px rgba(60, 72, 128, 0.12);
+                padding: 2.5rem 2rem;
+                margin-top: 2rem;
+            }
+            .product-card {
+                transition: transform 0.2s, box-shadow 0.2s;
+                border-radius: 18px;
+                box-shadow: 0 4px 16px rgba(60, 72, 128, 0.08);
+                background: #fff;
+            }
+            .product-card:hover {
+                transform: translateY(-6px) scale(1.03);
+                box-shadow: 0 12px 32px rgba(60, 72, 128, 0.18);
+            }
+            .filter-bar {
+                background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+                border-radius: 16px;
+                padding: 1.2rem 1.5rem;
+                margin-bottom: 2rem;
+                box-shadow: 0 2px 8px rgba(60, 72, 128, 0.10);
+            }
+            .pagination-bar {
+                background: #f3f4f6;
+                border-radius: 12px;
+                padding: 0.8rem 1.2rem;
+                box-shadow: 0 2px 8px rgba(60, 72, 128, 0.08);
+            }
+            .hourglass-loading {
+                filter: drop-shadow(0 2px 8px #6366f1);
+            }
+        `;
+        document.head.appendChild(style);
+        return () => {
+            document.head.removeChild(style);
+        };
+    }, []);
     useEffect(() => {
         dispatch(fetchCategories());
     }, [dispatch]);
