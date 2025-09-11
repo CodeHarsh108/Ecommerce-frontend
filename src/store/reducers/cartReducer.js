@@ -1,3 +1,7 @@
+
+
+
+
 const initialState = {
     cart: [],
     totalPrice: 0,
@@ -8,28 +12,28 @@ export const cartReducer = (state = initialState, action) => {
     switch (action.type) {
         case "ADD_CART":
             const productToAdd = action.payload;
-            const existingProduct = state.cart.find((item) => item.productId === productToAdd.productId);
-            
-            if (existingProduct) {
-                const updatedCart = state.cart.map((item) => {
-                    if (item.productId === productToAdd.productId) {
-                        return productToAdd;
-                    } else {
-                        return item;
-                    }
-                });
+            const existingProductIndex = state.cart.findIndex(
+                (item) => item.productId === productToAdd.productId
+            );
+
+            if(existingProductIndex >= 0) {
+                const updatedCart = [...state.cart];
+                updatedCart[existingProductIndex] = {
+                    ...updatedCart[existingProductIndex],
+                    quantity: productToAdd.quantity,
+                };
+
                 return {
                     ...state,
                     cart: updatedCart,
                 };
             } else {
-                const newCart = [...state.cart, productToAdd]; 
+                const newCart = [...state.cart, productToAdd];
                 return {
                     ...state,
                     cart: newCart,
                 };
             }
-
         case "REMOVE_CART":
             return {
                 ...state,
@@ -37,7 +41,6 @@ export const cartReducer = (state = initialState, action) => {
                     (item) => item.productId !== action.payload.productId
                 ),
             };
-
         case "GET_USER_CART_PRODUCTS":
             return {
                 ...state,
@@ -45,15 +48,10 @@ export const cartReducer = (state = initialState, action) => {
                 totalPrice: action.totalPrice,
                 cartId: action.cartId,
             };
-
         case "CLEAR_CART":
-            return { 
-                cart: [], 
-                totalPrice: 0, 
-                cartId: null 
-            };
-
+            return { cart:[], totalPrice: 0, cartId: null};
         default:
             return state;
     }
+    return state;
 }

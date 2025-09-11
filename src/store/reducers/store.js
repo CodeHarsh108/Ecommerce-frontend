@@ -4,8 +4,13 @@ import { cartReducer } from "./cartReducer";
 
 const cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [];
 const initialState = {
-    carts: { cart: cartItems },
-}
+    carts: {
+        cart: cartItems,
+        totalPrice: 0,
+        cartId: null,
+    },
+};
+    
 
 export const store  = configureStore({
     reducer: {
