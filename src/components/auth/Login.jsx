@@ -5,10 +5,16 @@ import { Link } from "react-router-dom";
 import { AiOutlineLogin } from "react-icons/ai";
 import InputField from "../shared/InputField";
 import Spinners from "../shared/Spinners";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";  
+import { authenticateSignInUser } from "../../store/actions/index.js";
 
 const Login = () => {
     const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
+    const dispatch = useDispatch();
+
+
     const {
         register,
         handleSubmit,
@@ -20,7 +26,7 @@ const Login = () => {
 
     const loginHandler = async(data) => {
         console.log("Login Click");
-
+        dispatch(authenticateSignInUser(data, toast, reset, navigate, setLoader));
     };
 
 

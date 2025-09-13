@@ -9,9 +9,7 @@ const user = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("aut
 
 
 const initialState = {
-    auth: {
-        user: user,
-    },
+    auth: { user: user,},
     carts: {
         cart: cartItems,
         totalPrice: 0,
