@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import BackDrop from './BackDrop';
+import { logOutUser } from '../../store/actions/index.js';
+import toast from 'react-hot-toast';
 
 
 const UserMenu = () => {
@@ -27,7 +29,7 @@ const UserMenu = () => {
     };
 
     const logOutHandler = () => {
-        dispatch(logOutUser(navigate));
+        dispatch(logOutUser(navigate, toast));
       };
   
     return (
