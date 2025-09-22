@@ -1,3 +1,4 @@
+import { set } from "react-hook-form";
 import api from "../../api/api"
 
 export const fetchProducts = (queryString) => async (dispatch) => {
@@ -128,6 +129,22 @@ export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoad
     } catch (error) {
         console.log(error);
         toast.error(error?.response?.data?.message || "Login Failed");
+    }finally{
+        setLoader(false);
+    }
+};
+
+
+export const registerNewUser = (sendData, toast, reset, navigate, setLoader) => async(dispatch) => {
+    try {
+        setLoader(true);
+        const { data }  = await api.post("/auth/signup", sendData);
+        reset();
+        toast.success(data?.message || "Registration Successful");
+        navigate("/login");
+    } catch (error) {
+        console.log(error);
+        toast.error(error?.response?.data?.message || "Registration Failed");
     }finally{
         setLoader(false);
     }
