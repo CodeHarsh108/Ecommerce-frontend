@@ -35,14 +35,6 @@ const Home = () => {
                 <HeroBanner />
             </div>
 
-            <div className="py-5">
-                <div className="flex flex-col justify-center items-center space-y-2">
-                    <h1 className="text-slate-800 text-4xl font-bold text-center">Products</h1>
-                    <span className="text-slate-700">
-                        Discover Our Exclusive Collection of Products
-                    </span>
-                </div>
-            </div>
             <style>
                 {`
                 .home-gradient-bg {
