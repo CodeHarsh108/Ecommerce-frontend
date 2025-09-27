@@ -11,7 +11,7 @@ import Cart from './components/cart/Cart';
 import Login from './components/auth/Login';
 import PrivateRoutes from './components/PrivateRoutes';
 import Register from './components/auth/Register';
-import Checkout from './components/Checkout';
+import Checkout from './components/checkout/Checkout';
 
 function App() {
   
