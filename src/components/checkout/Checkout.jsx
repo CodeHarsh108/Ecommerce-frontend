@@ -6,6 +6,7 @@ import { getUserAddresses } from '../../store/actions';
 import { Button } from '@mui/material';
 import toast from 'react-hot-toast';
 import Skeleton from '../shared/Skeleton';
+import ErrorPage from '../shared/ErrorPage';
 
 
 const Checkout = () => {
@@ -85,7 +86,7 @@ const Checkout = () => {
         </button>
       )}
       </div>
-      
+      {errorMessage && <ErrorPage message={errorMessage}/>}
     </div>
   )
 }
