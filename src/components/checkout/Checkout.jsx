@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import toast from 'react-hot-toast';
 import Skeleton from '../shared/Skeleton';
 import ErrorPage from '../shared/ErrorPage';
+import PaymentMethod from './PaymentMethod';
 
 
 const Checkout = () => {
@@ -65,6 +66,7 @@ const Checkout = () => {
       ) : (
         <div className='mt-10'>
         {activeStep === 0 && <AddressInfo address={address}/>}
+        {activeStep === 1 && <PaymentMethod/>}
       </div>
 
       )}
