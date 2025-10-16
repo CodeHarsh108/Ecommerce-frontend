@@ -159,9 +159,9 @@ export const logOutUser = (navigate, toast) => (dispatch) => {
 
 export const addUpdateUserAddress =
      (sendData, toast, addressId, setOpenAddressModal) => async (dispatch, getState) => {
-    /*
+    
     const { user } = getState().auth;
-    await api.post(`/addresses`, sendData, {
+    /*await api.post(`/addresses`, sendData, {
           headers: { Authorization: "Bearer " + user.jwtToken },
         });
     */
@@ -169,6 +169,7 @@ export const addUpdateUserAddress =
     try {
         if (!addressId) {
             const { data } = await api.post("/addresses", sendData);
+            toast.success(data?.message || "Address added successfully"); 
         } else {
             await api.put(`/addresses/${addressId}`, sendData);
         }
@@ -181,5 +182,20 @@ export const addUpdateUserAddress =
         dispatch({ type:"IS_ERROR", payload: null });
     } finally {
         setOpenAddressModal(false);
+    }
+};
+
+export const getUserAddresses = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        const { data } = await api.get(`/addresses`);
+        dispatch({type: "USER_ADDRESS", payload: data});
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch user addresses",
+         });
     }
 };
