@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserAddresses } from '../../store/actions';
 import { Button } from '@mui/material';
 import toast from 'react-hot-toast';
+import Skeleton from '../shared/Skeleton';
 
 
 const Checkout = () => {
@@ -56,10 +57,18 @@ const Checkout = () => {
         ))}
       </Stepper>
 
-      <div className='mt-10'>
+      {isLoading ? (
+        <div className='lg:w-[80%] mx-auto py-5'>
+          <Skeleton/>
+        </div>
+      ) : (
+        <div className='mt-10'>
         {activeStep === 0 && <AddressInfo address={address}/>}
       </div>
 
+      )}
+
+      
 
       <div className='flex justify-between items-center px-4 fixed z-50 h-17 bottom-0 bg-white left-0 w-full py-4 border-slate-200' style={{boxShadow: "0 -2px 4px rgba(100, 100, 100, 0.15 )"}}>
       <Button variant="outlined" disabled={activeStep === 0} onClick={handleBack} >Back</Button>  
