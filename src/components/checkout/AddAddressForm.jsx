@@ -31,6 +31,19 @@ const AddAddressForm = ({address, setOpenAddressModal}) => {
         }
 
 
+
+        useEffect(() => {
+          if(address?.addressId){
+            setValue("buildingName", address?.buildingName);
+            setValue("city", address?.city);
+            setValue("state", address?.state);
+            setValue("pincode", address?.pincode);
+            setValue("street", address?.street);
+            setValue("country", address?.country);
+          }
+        }, [address]);
+
+
   return (
     <div className="">
 
@@ -40,7 +53,7 @@ const AddAddressForm = ({address, setOpenAddressModal}) => {
 
         <div className="flex justify-center items-center mb-4 font-semibold text-2xl text-slate-800 py-2 px-4">
           <FaAddressCard className="mr-2 text-2xl" />
-          <span>Add Address</span>
+          <span>{!address?.addressId ? "Add Address" : "Update Address"}</span>
         </div>
 
          <div className="flex flex-col gap-4">
