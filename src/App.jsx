@@ -12,6 +12,7 @@ import Login from './components/auth/Login';
 import PrivateRoutes from './components/PrivateRoutes';
 import Register from './components/auth/Register';
 import Checkout from './components/checkout/Checkout';
+import AdminLayout from './components/admin/AdminLayout';
 
 function App() {
   
@@ -34,8 +35,12 @@ function App() {
         <Route path='/' element={<PrivateRoutes publicPage />}>
            <Route path='/login' element={<Login/>} />
            <Route path='/register' element={<Register />} />
-
         </Route>
+
+        <Route path='/' element={<PrivateRoutes />}>
+           <Route path='/admin' element={<AdminLayout/>} />
+        </Route>
+
       </Routes>
     </Router>
     <Toaster position='bottom-center' />
