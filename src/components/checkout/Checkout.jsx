@@ -9,6 +9,8 @@ import Skeleton from '../shared/Skeleton';
 import ErrorPage from '../shared/ErrorPage';
 import PaymentMethod from './PaymentMethod';
 import OrderSummary from './OrderSummary';
+import PayPalPayment from './PayPalPayment';
+import StripPayment from './StripPayment';
 
 
 const Checkout = () => {
@@ -73,6 +75,16 @@ const Checkout = () => {
         {activeStep === 0 && <AddressInfo address={address}/>}
         {activeStep === 1 && <PaymentMethod/>}
         {activeStep === 2 && <OrderSummary totalPrice={totalPrice} cart={cart} address={selectedUserCheckoutAddress} paymentMethod={paymentMethod} />}
+        {activeStep === 3 && 
+        <>
+        {paymentMethod === 'Stripe' ? (
+          <StripPayment/>
+        ) : (
+          <PayPalPayment/>
+        )
+        }
+        </>
+        }
       </div>
 
       )}
