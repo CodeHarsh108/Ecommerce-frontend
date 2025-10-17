@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import Skeleton from '../shared/Skeleton';
 import ErrorPage from '../shared/ErrorPage';
 import PaymentMethod from './PaymentMethod';
+import OrderSummary from './OrderSummary';
 
 
 const Checkout = () => {
@@ -19,7 +20,11 @@ const Checkout = () => {
 
   const {address, selectedUserCheckoutAddress} = useSelector((state) => state.auth);
 
-  const paymentMethod = false;
+  const { paymentMethod } = useSelector((state) => state.paymentMethod);
+
+  const { cart, totalPrice } = useSelector((state) => state.carts);
+
+  
 
   const dispatch = useDispatch();
 
@@ -40,7 +45,7 @@ const Checkout = () => {
             return;
         }
 
-        if(activeStep === 1 && (!selectedUserCheckoutAddress || !paymentMethod)) {
+        if(activeStep === 1 && !paymentMethod) {
             toast.error("Please select payment address before proceeding.");
             return;
         }
@@ -67,6 +72,7 @@ const Checkout = () => {
         <div className='mt-10'>
         {activeStep === 0 && <AddressInfo address={address}/>}
         {activeStep === 1 && <PaymentMethod/>}
+        {activeStep === 2 && <OrderSummary totalPrice={totalPrice} cart={cart} address={selectedUserCheckoutAddress} paymentMethod={paymentMethod} />}
       </div>
 
       )}
