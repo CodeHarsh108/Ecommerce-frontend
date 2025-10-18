@@ -13,37 +13,47 @@ import PrivateRoutes from './components/PrivateRoutes';
 import Register from './components/auth/Register';
 import Checkout from './components/checkout/Checkout';
 import AdminLayout from './components/admin/AdminLayout';
+import Dashboard from './components/admin/dashboard/Dashboard';
+import AdminProducts from './components/admin/products/AdminProducts';
+import Sellers from './components/admin/sellers/Sellers';
+import Category from './components/admin/categories/Category';
+import Orders from './components/admin/orders/Orders';
 
 function App() {
-  
-
   return (
     <React.Fragment>
-    <Router>
-      <Navbar />
-      <Routes>
-        <Route path='/' element={ <Home/> } />
-        <Route path='/products' element={ <Products/> } />
-        <Route path='/about' element={ <About/> } />
-        <Route path='/contact' element={ <Contact/> } />
-        <Route path='/cart' element={<Cart/>} />
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path='/' element={<Home/>} />
+          <Route path='/products' element={<Products/>} />
+          <Route path='/about' element={<About/>} />
+          <Route path='/contact' element={<Contact/>} />
+          <Route path='/cart' element={<Cart/>} />
 
-         <Route path='/' element={<PrivateRoutes />}>
-            <Route path='/checkout' element={ <Checkout />}/>
+          <Route element={<PrivateRoutes />}>
+            <Route path='/checkout' element={<Checkout />}/>
           </Route>
 
-        <Route path='/' element={<PrivateRoutes publicPage />}>
-           <Route path='/login' element={<Login/>} />
-           <Route path='/register' element={<Register />} />
-        </Route>
+          <Route element={<PrivateRoutes publicPage />}>
+            <Route path='/login' element={<Login/>} />
+            <Route path='/register' element={<Register />} />
+          </Route>
 
-        <Route path='/' element={<PrivateRoutes  adminOnly/>}>
-           <Route path='/admin' element={<AdminLayout/>} />
-        </Route>
+          {/* Admin Routes - Fixed Structure */}
+          <Route element={<PrivateRoutes adminOnly />}>
+            <Route path='/admin' element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path='products' element={<AdminProducts />} />
+              <Route path='sellers' element={<Sellers />} />
+              <Route path='categories' element={<Category />} />
+              <Route path='orders' element={<Orders/>} /> {/* Add this */}
+            </Route>
+          </Route>
 
-      </Routes>
-    </Router>
-    <Toaster position='bottom-center' />
+        </Routes>
+      </Router>
+      <Toaster position='bottom-center' />
     </React.Fragment>
   )
 }

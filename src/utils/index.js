@@ -51,16 +51,19 @@ export const adminNavigation = [
   }
 ];
 
-
 export const sellerNavigation = [
   {
-    name: "Orders", 
-    href: "/admin/orders", 
-    icon: FaShoppingCart,
+    name: "Dashboard", 
+    href: "/seller", 
+    icon: FaHome,
     current: true 
   }, {
+    name: "Orders", 
+    href: "/seller/orders", 
+    icon: FaShoppingCart
+  }, {
     name: "Products", 
-    href: "/admin/products", 
+    href: "/seller/products", 
     icon: FaBoxOpen
   }
 ];
