@@ -4,6 +4,7 @@ import { cartReducer } from "./cartReducer";
 import { authReducer } from "./authReducer";
 import { errorReducer } from "./errorReducer";
 import { paymentMethodReducer } from "./paymentMethodReducer";
+import { adminReducer } from "./adminReducer";
 
 const cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [];
 const user = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")) : null ;
@@ -11,7 +12,9 @@ const user = localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("aut
 
 
 const initialState = {
-    auth: { user: user,},
+    auth: { 
+        user: localStorage.getItem("auth") ? JSON.parse(localStorage.getItem("auth")) : null 
+    },
     carts: {
         cart: cartItems,
         totalPrice: 0,
@@ -23,6 +26,9 @@ const initialState = {
         categoryLoader: false,
         categoryError: null,
         btnLoader: false,
+    },
+    admin: { 
+        analytics: {},
     }
 };
     
@@ -34,6 +40,7 @@ export const store  = configureStore({
         auth: authReducer,
         errors: errorReducer,
         paymentMethod: paymentMethodReducer,
+        admin: adminReducer,
     },
     preloadedState: initialState,
 });

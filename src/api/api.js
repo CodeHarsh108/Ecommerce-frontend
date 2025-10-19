@@ -7,6 +7,14 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    // Get token from localStorage or Redux store
+    const authData = localStorage.getItem("auth");
+    if (authData) {
+      const { jwtToken } = JSON.parse(authData);
+      if (jwtToken) {
+        config.headers.Authorization = `Bearer ${jwtToken}`;
+      }
+    }
     return config;
   },
   (error) => {

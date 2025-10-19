@@ -8,7 +8,13 @@ const initialState = {
 export const authReducer = (state = initialState, action) => {
     switch (action.type) {
         case "LOGIN_USER":
-            return { ...state, user: action.payload };
+            return { 
+                ...state, 
+                user: {
+                    ...action.payload,
+                    jwtToken: action.payload.jwtToken 
+                } 
+            };
         case "USER_ADDRESS":
             return { ...state, address: action.payload };
         case "SELECT_CHECKOUT_ADDRESS":

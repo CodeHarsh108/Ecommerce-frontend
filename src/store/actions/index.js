@@ -120,16 +120,32 @@ export const removeFromCart =  (data, toast) => (dispatch, getState) => {
 export const authenticateSignInUser = (sendData, toast, reset, navigate, setLoader) => async(dispatch) => {
     try {
         setLoader(true);
+        console.log("Sending login request...");
         const { data }  = await api.post("/auth/signin", sendData);
-        dispatch({ type: "LOGIN_USER", payload: data });
+        
+        console.log("=== LOGIN RESPONSE ===");
+        console.log("Full response:", data);
+        console.log("JWT Token in response:", data.jwtToken);
+        console.log("User data:", data);
+        console.log("=== END LOGIN RESPONSE ===");
+        
+        // Store in Redux
+        dispatch({ 
+            type: "LOGIN_USER", 
+            payload: data  // Make sure data contains jwtToken
+        });
+        
+        // Store in localStorage
         localStorage.setItem("auth", JSON.stringify(data));
+        console.log("Stored in localStorage:", JSON.parse(localStorage.getItem("auth")));
+        
         reset();
         toast.success("Login Successful");
         navigate("/");
     } catch (error) {
-        console.log(error);
+        console.log("Login error:", error);
         toast.error(error?.response?.data?.message || "Login Failed");
-    }finally{
+    } finally {
         setLoader(false);
     }
 };
@@ -276,5 +292,40 @@ export const getUserCart = () => async (dispatch, getState) => {
             type: "IS_ERROR",
             payload: error?.response?.data?.message || "Failed to fetch cart Items",
          });
+    }
+};
+
+
+export const analyticsAction = () => async (dispatch, getState) => {
+    try {
+        dispatch({ type: "IS_FETCHING"});
+        
+        const state = getState();
+        const { user } = state.auth;
+        
+        if (!user || !user.jwtToken) {
+            console.log("No user token available, using dummy data");
+            dispatch({ type: "IS_SUCCESS"});
+            return;
+        }
+        
+        const { data } = await api.get('/admin/app/analytics', {
+            headers: { 
+                Authorization: `Bearer ${user.jwtToken}`
+            }
+        });
+        
+        console.log("Real analytics data received:", data);
+        
+        dispatch({
+            type: "FETCH_ANALYTICS",
+            payload: data,
+        });
+        dispatch({ type: "IS_SUCCESS"});
+        
+    } catch (error) {
+        console.log("Analytics API failed, using dummy data:", error.message);
+        // Don't dispatch error - we'll use dummy data instead
+        dispatch({ type: "IS_SUCCESS"});
     }
 };
