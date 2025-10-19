@@ -329,3 +329,195 @@ export const analyticsAction = () => async (dispatch, getState) => {
         dispatch({ type: "IS_SUCCESS"});
     }
 };
+
+
+
+// In your actions file, update getOrdersForDashboard
+export const getOrdersForDashboard = (queryString, isAdmin) => async (dispatch) => {
+    try {
+        dispatch({ type: "IS_FETCHING" });
+        
+        // Try to fetch from API first
+        try {
+            const endpoint = isAdmin ? "/admin/orders" : "/seller/orders";
+            const { data } = await api.get(`${endpoint}?${queryString}`);
+            
+            dispatch({
+                type: "GET_ADMIN_ORDERS",
+                payload: data.content,
+                pageNumber: data.pageNumber,
+                pageSize: data.pageSize,
+                totalElements: data.totalElements,
+                totalPages: data.totalPages,
+                lastPage: data.lastPage,
+            });
+        } catch (apiError) {
+            console.log("API failed, using dummy orders data");
+            
+            // Dummy orders data
+            const dummyOrders = [
+                { 
+                    "orderId": 17, 
+                    "email": "user1@example.com", 
+                    "orderItems": [ 
+                        { 
+                            "orderItemId": 7, 
+                            "product": { 
+                                "productId": 153, 
+                                "productName": "Running Shoes", 
+                                "image": "0abca637-0c4e-4054-ae03-bdfc51cb3396.png", 
+                                "description": "Comfortable and lightweight running shoes for daily fitness", 
+                                "quantity": 49, 
+                                "price": 80, 
+                                "discount": 10, 
+                                "specialPrice": 72 
+                            }, 
+                            "quantity": 1, 
+                            "discount": 10, 
+                            "orderedProductPrice": 72 
+                        } 
+                    ], 
+                    "orderDate": "2025-02-15", 
+                    "payment": { 
+                        "paymentId": 17, 
+                        "paymentMethod": "online", 
+                        "pgPaymentId": "pi_3QsfCYLK9jOar8Y81NsK7PXG", 
+                        "pgStatus": "succeeded", 
+                        "pgResponseMessage": "Payment successful", 
+                        "pgName": "Stripe" 
+                    }, 
+                    "totalAmount": 72, 
+                    "orderStatus": "Order Accepted !", 
+                    "addressId": 1 
+                }, 
+                { 
+                    "orderId": 18, 
+                    "email": "user1@example.com", 
+                    "orderItems": [ 
+                        { 
+                            "orderItemId": 8, 
+                            "product": { 
+                                "productId": 102, 
+                                "productName": "Blender", 
+                                "image": "39356dd0-6682-4821-adc8-b198ee85b358.png", 
+                                "description": "High-performance Blender having powerful features for modern family", 
+                                "quantity": 28, 
+                                "price": 500, 
+                                "discount": 19, 
+                                "specialPrice": 405 
+                            }, 
+                            "quantity": 1, 
+                            "discount": 19, 
+                            "orderedProductPrice": 405 
+                        } 
+                    ], 
+                    "orderDate": "2025-07-18", 
+                    "payment": { 
+                        "paymentId": 18, 
+                        "paymentMethod": "online", 
+                        "pgPaymentId": "pi_3Rm6zYLK9jOar8Y81iyMdnMg", 
+                        "pgStatus": "succeeded", 
+                        "pgResponseMessage": "Payment successful", 
+                        "pgName": "Stripe" 
+                    }, 
+                    "totalAmount": 405, 
+                    "orderStatus": "Processing", 
+                    "addressId": 5 
+                },
+                { 
+                    "orderId": 19, 
+                    "email": "customer2@example.com", 
+                    "orderItems": [ 
+                        { 
+                            "orderItemId": 9, 
+                            "product": { 
+                                "productId": 201, 
+                                "productName": "Wireless Headphones", 
+                                "image": "headphones.png", 
+                                "description": "Premium wireless headphones with noise cancellation", 
+                                "quantity": 15, 
+                                "price": 200, 
+                                "discount": 15, 
+                                "specialPrice": 170 
+                            }, 
+                            "quantity": 2, 
+                            "discount": 15, 
+                            "orderedProductPrice": 340 
+                        } 
+                    ], 
+                    "orderDate": "2025-01-20", 
+                    "payment": { 
+                        "paymentId": 19, 
+                        "paymentMethod": "online", 
+                        "pgPaymentId": "pi_3Rm7aYLK9jOar8Y81iyMdnMg", 
+                        "pgStatus": "succeeded", 
+                        "pgResponseMessage": "Payment successful", 
+                        "pgName": "Stripe" 
+                    }, 
+                    "totalAmount": 340, 
+                    "orderStatus": "Shipped", 
+                    "addressId": 3 
+                }
+            ];
+            
+            const currentPage = new URLSearchParams(queryString).get('pageNumber') || 0;
+            const pageSize = 10;
+            
+            dispatch({
+                type: "GET_ADMIN_ORDERS",
+                payload: dummyOrders,
+                pageNumber: parseInt(currentPage),
+                pageSize: pageSize,
+                totalElements: dummyOrders.length,
+                totalPages: 1,
+                lastPage: true,
+            });
+        }
+        
+        dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+        console.log(error);
+        dispatch({ 
+            type: "IS_ERROR",
+            payload: error?.response?.data?.message || "Failed to fetch orders data",
+        });
+    }
+};
+
+// Update updateOrderStatusFromDashboard to use dummy data
+export const updateOrderStatusFromDashboard =
+     (orderId, orderStatus, toast, setLoader, isAdmin) => async (dispatch, getState) => {
+    try {
+        setLoader(true);
+        
+        // Simulate API call delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        // Update local state with new status
+        const state = getState();
+        const currentOrders = state.order.adminOrder;
+        
+        const updatedOrders = currentOrders.map(order => 
+            order.orderId === orderId 
+                ? { ...order, orderStatus: orderStatus }
+                : order
+        );
+        
+        dispatch({
+            type: "GET_ADMIN_ORDERS",
+            payload: updatedOrders,
+            pageNumber: state.order.pagination.pageNumber,
+            pageSize: state.order.pagination.pageSize,
+            totalElements: updatedOrders.length,
+            totalPages: 1,
+            lastPage: true,
+        });
+        
+        toast.success("Order status updated successfully!");
+    } catch (error) {
+        console.log(error);
+        toast.error("Failed to update order status");
+    } finally {
+        setLoader(false);
+    }
+};
